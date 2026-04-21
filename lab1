@@ -1,0 +1,67 @@
+# -*- coding: utf-8 -*-
+# Лабораторная работа №1, вариант 33
+# Перевод десятичного числа в систему счисления с основанием 2..9
+
+# Лямбда-функция для проверки допустимости основания
+is_valid_base = lambda b: 2 <= b <= 9
+
+def decimal_to_base(n: int, base: int) -> str:
+    """
+    Переводит целое десятичное число n в систему счисления с основанием base (2-9).
+    Поддерживает ноль и отрицательные числа.
+    """
+    if n == 0:
+        return "0"
+
+    # Запоминаем знак и работаем с абсолютным значением
+    sign = "-" if n < 0 else ""
+    num = abs(n)
+
+    digits = []
+    while num > 0:
+        remainder = num % base      # остаток от деления (0 .. base-1)
+        digits.append(str(remainder))  # для основания 2-9 цифры совпадают с числами
+        num //= base
+
+    # Остатки собирались в обратном порядке, переворачиваем
+    digits.reverse()
+    return sign + "".join(digits)
+
+def get_integer(prompt: str) -> int:
+    """Запрашивает у пользователя целое число, обрабатывая ошибки ввода."""
+    while True:
+        try:
+            value = int(input(prompt))
+            return value
+        except ValueError:
+            print("Ошибка: необходимо ввести целое число. Попробуйте снова.")
+
+def get_base(prompt: str) -> int:
+    """Запрашивает основание системы счисления (2-9) с проверкой и обработкой ошибок."""
+    while True:
+        try:
+            base = int(input(prompt))
+            if is_valid_base(base):
+                return base
+            else:
+                print("Ошибка: основание должно быть в диапазоне от 2 до 9.")
+        except ValueError:
+            print("Ошибка: необходимо ввести целое число.")
+
+def main():
+    print("=== Перевод десятичного числа в систему счисления (основание 2..9) ===\n")
+
+    # Ввод числа
+    number = get_integer("Введите целое десятичное число: ")
+
+    # Ввод основания
+    base = get_base("Введите основание системы счисления (2-9): ")
+
+    # Выполнение перевода
+    result = decimal_to_base(number, base)
+
+    # Вывод результата
+    print(f"\nРезультат: {number}(10) = {result}({base})")
+
+if __name__ == "__main__":
+    main()
